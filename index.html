@@ -821,6 +821,20 @@
     document.addEventListener('cut', e => e.preventDefault());
     document.addEventListener('contextmenu', e => e.preventDefault());
 
+    // Bloqueia colar em todos os campos de texto
+    document.addEventListener('paste', function(e) {
+      if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        e.preventDefault();
+      }
+    });
+
+    // Bloqueia arrastar texto para dentro dos campos
+    document.addEventListener('drop', function(e) {
+      if (e.target.tagName === 'TEXTAREA' || e.target.tagName === 'INPUT') {
+        e.preventDefault();
+      }
+    });
+
     document.addEventListener('keydown', function(e) {
       // Bloqueia Ctrl+C, Ctrl+X, Ctrl+A, Ctrl+P, PrintScreen
       if (e.key === 'PrintScreen' || (e.ctrlKey && ['c','x','a','p','u','s'].includes(e.key.toLowerCase()))) {
