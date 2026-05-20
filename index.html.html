@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teste — Analista Financeiro Jr I</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #F7F6F2;
+      --surface: #FFFFFF;
+      --border: #E2E0D8;
+      --border-strong: #C8C5BA;
+      --text: #1A1917;
+      --text-2: #6B6860;
+      --text-3: #A09D95;
+      --blue-bg: #EDF3FB;
+      --blue-text: #1D4ED8;
+      --blue-border: #BFCFEE;
+      --green-bg: #EDFAF4;
+      --green-text: #0F6E4A;
+      --green-border: #A7DFC8;
+      --amber-bg: #FEF6E4;
+      --amber-text: #92400E;
+      --radius: 10px;
+      --radius-sm: 6px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2.5rem 1rem 4rem;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+    }
+
+    /* Print: tela branca */
+    @media print {
+      body * { visibility: hidden !important; }
+      body::after {
+        content: '';
+        display: block;
+        visibility: visible !important;
+        position: fixed;
+        inset: 0;
+        background: white;
+      }
+    }
+
+    .page { max-width: 720px; margin: 0 auto; }
+
+    /* ── TELA DE INÍCIO ── */
+    #start-screen {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      text-align: center;
+    }
+    .start-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2.5rem 2rem;
+      max-width: 440px;
+      width: 100%;
+    }
+    .start-logo {
+      width: 48px;
+      height: 48px;
+      background: var(--blue-text);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.25rem;
+    }
+    .start-logo svg { width: 24px; height: 24px; fill: white; }
+    .start-card h1 {
+      font-size: 20px;
+      font-weight: 500;
+      letter-spacing: -.02em;
+      margin-bottom: .4rem;
+    }
+    .start-card .start-sub {
+      font-size: 14px;
+      color: var(--text-2);
+      margin-bottom: 1.75rem;
+      line-height: 1.5;
+    }
+    .start-info {
+      display: flex;
+      justify-content: center;
+      gap: 1.25rem;
+      margin-bottom: 1.75rem;
+      flex-wrap: wrap;
+    }
+    .start-info-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      color: var(--text-2);
+    }
+    .info-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+    }
+    .dot-blue { background: var(--blue-text); }
+    .dot-green { background: var(--green-text); }
+    .dot-amber { background: #D97706; }
+
+    .name-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-2);
+      text-align: left;
+      margin-bottom: 6px;
+    }
+    .name-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--text);
+      background: var(--surface);
+      outline: none;
+      transition: border-color .15s;
+      margin-bottom: 1.25rem;
+      -webkit-user-select: text;
+      user-select: text;
+    }
+    .name-input:focus { border-color: var(--blue-text); }
+    .name-input::placeholder { color: var(--text-3); }
+
+    .btn-start {
+      width: 100%;
+      padding: 12px;
+      background: var(--blue-text);
+      color: white;
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background .15s, transform .1s;
+    }
+    .btn-start:hover { background: #1740B0; }
+    .btn-start:active { transform: scale(.98); }
+    .btn-start:disabled { background: var(--border-strong); cursor: not-allowed; }
+
+    /* ── TESTE ── */
+    #test-screen { display: none; }
+
+    /* Timer bar */
+    .timer-bar {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: .75rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: -2.5rem -1rem 2rem;
+      padding-left: calc(50% - 360px + 1.25rem);
+      padding-right: calc(50% - 360px + 1.25rem);
+    }
+    .timer-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .timer-name {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .timer-sep { color: var(--border-strong); }
+    .timer-label {
+      font-size: 12px;
+      color: var(--text-3);
+    }
+    .timer-display {
+      font-family: 'DM Mono', monospace;
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--text);
+      background: var(--bg);
+      padding: 4px 12px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      letter-spacing: .04em;
+    }
+
+    /* Header */
+    .header {
+      margin-bottom: 2.5rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .header-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--text-3);
+      margin-bottom: .75rem;
+    }
+    .header-tag span {
+      display: inline-block;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--text-3);
+    }
+    .header h1 {
+      font-size: 26px;
+      font-weight: 500;
+      letter-spacing: -.02em;
+      margin-bottom: .4rem;
+    }
+    .header p { font-size: 14px; color: var(--text-2); }
+    .header-meta { display: flex; gap: 1.5rem; margin-top: 1rem; flex-wrap: wrap; }
+    .meta-item {
+      display: flex; align-items: center; gap: 6px;
+      font-size: 13px; color: var(--text-2);
+    }
+    .meta-dot { width: 5px; height: 5px; border-radius: 50%; }
+
+    /* Section */
+    .section-label {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 1rem; margin-top: 2rem;
+    }
+    .section-badge {
+      display: inline-flex; padding: 3px 10px;
+      border-radius: 20px; font-size: 11px; font-weight: 500; letter-spacing: .04em;
+    }
+    .badge-op { background: var(--blue-bg); color: var(--blue-text); border: 1px solid var(--blue-border); }
+    .badge-nf { background: var(--green-bg); color: var(--green-text); border: 1px solid var(--green-border); }
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+    .section-desc { font-size: 12px; color: var(--text-3); }
+
+    /* Question card */
+    .q-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: .75rem;
+      transition: border-color .15s;
+    }
+    .q-card:hover { border-color: var(--border-strong); }
+    .q-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 1rem; }
+    .q-num {
+      min-width: 26px; height: 26px; border-radius: 50%;
+      background: var(--bg); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+      color: var(--text-2); flex-shrink: 0; margin-top: 1px;
+    }
+    .q-text { font-size: 15px; line-height: 1.55; color: var(--text); flex: 1; }
+    .q-tag {
+      display: inline-flex; padding: 2px 8px; border-radius: 4px;
+      font-size: 10px; font-weight: 500; letter-spacing: .04em;
+      white-space: nowrap; margin-left: 8px; vertical-align: middle;
+    }
+    .tag-mc { background: var(--blue-bg); color: var(--blue-text); }
+    .tag-ab { background: var(--amber-bg); color: var(--amber-text); }
+    .tag-nf { background: var(--green-bg); color: var(--green-text); }
+
+    /* Options */
+    .options { display: flex; flex-direction: column; gap: 8px; margin-left: 38px; }
+    .option {
+      display: flex; align-items: flex-start; gap: 10px;
+      padding: 10px 12px; border: 1px solid var(--border);
+      border-radius: var(--radius-sm); cursor: pointer;
+      transition: background .12s, border-color .12s;
+      font-size: 14px; color: var(--text-2); line-height: 1.45;
+    }
+    .option:hover { background: var(--bg); border-color: var(--border-strong); color: var(--text); }
+    .option.selected {
+      background: var(--blue-bg);
+      border-color: var(--blue-text);
+      color: var(--blue-text);
+    }
+    .option.selected .opt-letter { color: var(--blue-text); }
+    .opt-letter {
+      font-family: 'DM Mono', monospace; font-size: 11px; font-weight: 500;
+      color: var(--text-3); min-width: 14px; padding-top: 1px;
+    }
+
+    /* Textarea */
+    .open-box {
+      margin-left: 38px;
+    }
+    .open-textarea {
+      width: 100%;
+      min-height: 90px;
+      padding: .75rem 1rem;
+      border: 1px dashed var(--border-strong);
+      border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--text);
+      background: var(--bg);
+      resize: vertical;
+      outline: none;
+      transition: border-color .15s;
+      -webkit-user-select: text;
+      user-select: text;
+    }
+    .open-textarea:focus { border-color: var(--blue-text); border-style: solid; }
+    .open-textarea::placeholder { color: var(--text-3); font-style: italic; }
+
+    /* Excel table */
+    .excel-wrap {
+      margin-left: 38px; margin-bottom: 1rem;
+      display: inline-block;
+      border: 1px solid var(--border-strong);
+      border-radius: var(--radius-sm); overflow: hidden;
+    }
+    .excel-table { border-collapse: collapse; font-size: 13px; font-family: 'DM Mono', monospace; }
+    .excel-table .col-head {
+      background: #D6E4F7; color: #1D4ED8; font-size: 11px; font-weight: 500;
+      text-align: center; padding: 4px 20px; border: 1px solid #BFCFEE;
+    }
+    .excel-table .row-num {
+      background: #F0EFE9; color: var(--text-3); font-size: 11px;
+      text-align: center; padding: 5px 10px; border: 1px solid var(--border); min-width: 32px;
+    }
+    .excel-table .row-num.head { background: #E8E6DF; }
+    .excel-table td { padding: 5px 16px; border: 1px solid var(--border); color: var(--text); background: var(--surface); }
+    .excel-table td.header-row { background: #F0EFE9; font-weight: 500; color: var(--text-2); }
+
+    /* NF */
+    .nf-container {
+      background: #EEF4F9; border-radius: var(--radius);
+      padding: 1rem; margin-bottom: 1.5rem; border: 1px solid #D0DFE9;
+    }
+    .nf-label {
+      font-size: 11px; font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+      color: #1D4ED8; margin-bottom: .6rem; display: flex; align-items: center; gap: 6px;
+    }
+    .nf-label::before {
+      content: ''; display: inline-block; width: 8px; height: 8px;
+      border-radius: 2px; background: #1D4ED8;
+    }
+    .nf-doc {
+      background: var(--surface); border: 1px solid #C8D8E8;
+      border-radius: var(--radius-sm); overflow: hidden; font-size: 12px;
+    }
+    .nf-top {
+      background: #1D4ED8; padding: 12px 16px;
+      display: flex; justify-content: space-between; align-items: flex-start;
+    }
+    .nf-top-left .nf-title { font-size: 13px; font-weight: 500; color: #fff; letter-spacing: .01em; }
+    .nf-top-left .nf-sub { font-size: 11px; color: rgba(255,255,255,.65); margin-top: 2px; }
+    .nf-top-right { text-align: right; font-family: 'DM Mono', monospace; }
+    .nf-top-right .nf-num { font-size: 13px; font-weight: 500; color: #fff; }
+    .nf-top-right .nf-date { font-size: 10px; color: rgba(255,255,255,.65); margin-top: 2px; }
+    .nf-body { padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; }
+    .nf-section { padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+    .nf-section:last-child { border-bottom: none; padding-bottom: 0; }
+    .nf-section-title {
+      font-size: 10px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: .07em; color: var(--text-3); margin-bottom: 6px;
+    }
+    .nf-fields { display: flex; gap: 12px; flex-wrap: wrap; }
+    .nf-field { display: flex; flex-direction: column; flex: 1; min-width: 100px; }
+    .nf-field-label { font-size: 10px; color: var(--text-3); margin-bottom: 1px; }
+    .nf-field-val { font-size: 12px; color: var(--text); }
+    .nf-field-val.bold { font-weight: 500; }
+    .nf-items-table { width: 100%; border-collapse: collapse; }
+    .nf-items-table th {
+      font-size: 10px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: .05em; color: var(--text-3); padding: 4px 8px;
+      border-bottom: 1px solid var(--border); text-align: left;
+    }
+    .nf-items-table td {
+      font-size: 11px; color: var(--text); padding: 6px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .nf-items-table tr:last-child td { border-bottom: none; }
+    .nf-items-table .right { text-align: right; }
+    .nf-footer {
+      background: var(--bg); padding: 10px 16px;
+      display: flex; justify-content: flex-end; gap: 24px;
+      border-top: 1px solid var(--border);
+    }
+    .nf-total { text-align: right; }
+    .nf-total-label { font-size: 10px; color: var(--text-3); }
+    .nf-total-val { font-size: 13px; font-weight: 500; color: var(--text); }
+    .nf-total-val.highlight { color: var(--green-text); }
+
+    .divider { height: 1px; background: var(--border); margin: 2rem 0; }
+
+    /* Finalizar */
+    .finish-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      margin-top: 2rem;
+      text-align: center;
+    }
+    .finish-section h3 {
+      font-size: 16px; font-weight: 500; margin-bottom: .4rem;
+    }
+    .finish-section p {
+      font-size: 13px; color: var(--text-2); margin-bottom: 1.25rem; line-height: 1.5;
+    }
+    .btn-finish {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 12px 28px;
+      background: #0F6E4A; color: white;
+      border: none; border-radius: var(--radius-sm);
+      font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 500;
+      cursor: pointer; transition: background .15s, transform .1s;
+    }
+    .btn-finish:hover { background: #0A5239; }
+    .btn-finish:active { transform: scale(.98); }
+    .btn-finish svg { width: 18px; height: 18px; fill: white; }
+
+    /* Footer */
+    .footer {
+      display: flex; gap: 1.5rem; flex-wrap: wrap;
+      padding-top: 1.5rem; border-top: 1px solid var(--border); margin-top: 1rem;
+    }
+    .footer-item { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--text-3); }
+    .footer-dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* Overlay print */
+    #print-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: white;
+      z-index: 99999;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Print overlay (JS-triggered) -->
+  <div id="print-overlay"></div>
+
+  <div class="page">
+
+    <!-- ── TELA INICIAL ── -->
+    <div id="start-screen">
+      <div class="start-card">
+        <div class="start-logo">
+          <svg viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9l2 2 4-4"/></svg>
+        </div>
+        <h1>Teste — Analista Financeiro Jr I</h1>
+        <p class="start-sub">Leia cada questão com atenção e responda com base na sua experiência prática.</p>
+        <div class="start-info">
+          <div class="start-info-item"><div class="info-dot dot-blue"></div>5 questões operacionais</div>
+          <div class="start-info-item"><div class="info-dot dot-green"></div>5 questões com NF</div>
+          <div class="start-info-item"><div class="info-dot dot-amber"></div>~25 minutos</div>
+        </div>
+        <div class="name-label">Seu nome completo</div>
+        <input
+          class="name-input"
+          id="candidate-name"
+          type="text"
+          placeholder="Digite seu nome..."
+          autocomplete="off"
+        />
+        <button class="btn-start" id="btn-start" onclick="startTest()" disabled>
+          Iniciar teste
+        </button>
+      </div>
+    </div>
+
+    <!-- ── TELA DO TESTE ── -->
+    <div id="test-screen">
+
+      <!-- Timer sticky -->
+      <div class="timer-bar">
+        <div class="timer-left">
+          <span class="timer-name" id="timer-name"></span>
+          <span class="timer-sep">·</span>
+          <span class="timer-label">Analista Financeiro Jr I</span>
+        </div>
+        <div class="timer-display" id="timer-display">00:00:00</div>
+      </div>
+
+      <!-- Header -->
+      <div class="header">
+        <div class="header-tag"><span></span>Processo seletivo</div>
+        <h1>Analista Financeiro Jr I</h1>
+        <p id="header-name" style="color:var(--text-2);font-size:14px;"></p>
+        <div class="header-meta">
+          <div class="meta-item"><div class="meta-dot dot-blue"></div>5 questões operacionais</div>
+          <div class="meta-item"><div class="meta-dot dot-green"></div>5 questões práticas com NF</div>
+          <div class="meta-item">⏱ ~25 minutos</div>
+        </div>
+      </div>
+
+      <!-- Section 1 -->
+      <div class="section-label">
+        <span class="section-badge badge-op">Operacional</span>
+        <div class="section-line"></div>
+        <span class="section-desc">Rotinas financeiras</span>
+      </div>
+
+      <!-- Q1 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">1</div>
+          <div class="q-text">Você recebeu 3 notas fiscais para lançar no sistema hoje, mas só tem tempo para processar 2 antes do horário de corte do banco. Como decide quais priorizar? <span class="q-tag tag-ab">aberta</span></div>
+        </div>
+        <div class="open-box">
+          <textarea class="open-textarea" id="q1" placeholder="Escreva sua resposta..."></textarea>
+        </div>
+      </div>
+
+      <!-- Q2 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">2</div>
+          <div class="q-text">Ao fazer a conciliação bancária, você percebe que um pagamento consta no sistema mas não aparece no extrato. O que você faz? <span class="q-tag tag-mc">múltipla escolha</span></div>
+        </div>
+        <div class="options" id="q2">
+          <div class="option" onclick="selectOption(this,'q2','a')"><span class="opt-letter">a)</span>Ignora, pois o sistema é mais confiável que o banco</div>
+          <div class="option" onclick="selectOption(this,'q2','b')"><span class="opt-letter">b)</span>Verifica o comprovante, confere os dados bancários e aciona o responsável para investigar</div>
+          <div class="option" onclick="selectOption(this,'q2','c')"><span class="opt-letter">c)</span>Estorna o lançamento no sistema e relança no próximo mês</div>
+          <div class="option" onclick="selectOption(this,'q2','d')"><span class="opt-letter">d)</span>Aguarda o próximo extrato para ver se aparece</div>
+        </div>
+      </div>
+
+      <!-- Q3 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">3</div>
+          <div class="q-text">Quais informações você precisa ter em mãos antes de efetuar um pagamento a um fornecedor? <span class="q-tag tag-ab">aberta</span></div>
+        </div>
+        <div class="open-box">
+          <textarea class="open-textarea" id="q3" placeholder="Escreva sua resposta..."></textarea>
+        </div>
+      </div>
+
+      <!-- Q4 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">4</div>
+          <div class="q-text">No Excel, você precisa somar todos os valores da coluna B onde a coluna A diz "Fornecedor X". Qual função usaria? <span class="q-tag tag-mc">múltipla escolha</span></div>
+        </div>
+        <div class="excel-wrap">
+          <table class="excel-table">
+            <thead>
+              <tr>
+                <td class="row-num head"></td>
+                <td class="col-head">A</td>
+                <td class="col-head">B</td>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td class="row-num">1</td><td class="header-row">Fornecedor</td><td class="header-row">Valor</td></tr>
+              <tr><td class="row-num">2</td><td>Fornecedor X</td><td>R$ 1.200,00</td></tr>
+              <tr><td class="row-num">3</td><td>Fornecedor Y</td><td>R$ 3.450,00</td></tr>
+              <tr><td class="row-num">4</td><td>Fornecedor X</td><td>R$ 870,00</td></tr>
+              <tr><td class="row-num">5</td><td>Fornecedor Z</td><td>R$ 5.000,00</td></tr>
+              <tr><td class="row-num">6</td><td>Fornecedor X</td><td>R$ 620,00</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="options" id="q4" style="margin-top:.75rem">
+          <div class="option" onclick="selectOption(this,'q4','a')"><span class="opt-letter">a)</span>=SOMA(B:B)</div>
+          <div class="option" onclick="selectOption(this,'q4','b')"><span class="opt-letter">b)</span>=SOMASE(A:A;"Fornecedor X";B:B)</div>
+          <div class="option" onclick="selectOption(this,'q4','c')"><span class="opt-letter">c)</span>=CONT.SE(A:A;"Fornecedor X")</div>
+          <div class="option" onclick="selectOption(this,'q4','d')"><span class="opt-letter">d)</span>=MÉDIA(B:B)</div>
+        </div>
+      </div>
+
+      <!-- Q5 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">5</div>
+          <div class="q-text">O que você faz quando recebe uma NF com dados do destinatário errados (ex: CNPJ diferente da sua empresa)? <span class="q-tag tag-mc">múltipla escolha</span></div>
+        </div>
+        <div class="options" id="q5">
+          <div class="option" onclick="selectOption(this,'q5','a')"><span class="opt-letter">a)</span>Lança normalmente e corrige depois</div>
+          <div class="option" onclick="selectOption(this,'q5','b')"><span class="opt-letter">b)</span>Devolve ao fornecedor e solicita cancelamento e reemissão com os dados corretos</div>
+          <div class="option" onclick="selectOption(this,'q5','c')"><span class="opt-letter">c)</span>Edita os dados no sistema interno</div>
+          <div class="option" onclick="selectOption(this,'q5','d')"><span class="opt-letter">d)</span>Paga e avisa a área fiscal depois</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Section 2 -->
+      <div class="section-label">
+        <span class="section-badge badge-nf">Prático</span>
+        <div class="section-line"></div>
+        <span class="section-desc">Leitura e interpretação da nota fiscal abaixo</span>
+      </div>
+
+      <!-- NF -->
+      <div class="nf-container">
+        <div class="nf-label">Nota fiscal de referência</div>
+        <div class="nf-doc">
+          <div class="nf-top">
+            <div class="nf-top-left">
+              <div class="nf-title">NF-e — Nota Fiscal Eletrônica</div>
+              <div class="nf-sub">Venda de mercadoria</div>
+            </div>
+            <div class="nf-top-right">
+              <div class="nf-num">NF Nº 004.821 · Série 1</div>
+              <div class="nf-date">Emissão: 05/05/2025 · Saída: 05/05/2025</div>
+            </div>
+          </div>
+          <div class="nf-body">
+            <div class="nf-section">
+              <div class="nf-section-title">Emitente</div>
+              <div class="nf-fields">
+                <div class="nf-field"><div class="nf-field-label">Razão social</div><div class="nf-field-val bold">Distribuidora Alfa Ltda.</div></div>
+                <div class="nf-field"><div class="nf-field-label">CNPJ</div><div class="nf-field-val">12.345.678/0001-90</div></div>
+                <div class="nf-field"><div class="nf-field-label">UF</div><div class="nf-field-val">SP</div></div>
+              </div>
+            </div>
+            <div class="nf-section">
+              <div class="nf-section-title">Destinatário</div>
+              <div class="nf-fields">
+                <div class="nf-field"><div class="nf-field-label">Razão social</div><div class="nf-field-val bold">Comércio Beta S.A.</div></div>
+                <div class="nf-field"><div class="nf-field-label">CNPJ</div><div class="nf-field-val">98.765.432/0001-11</div></div>
+                <div class="nf-field"><div class="nf-field-label">UF</div><div class="nf-field-val">SP</div></div>
+              </div>
+            </div>
+            <div class="nf-section">
+              <div class="nf-section-title">Produtos</div>
+              <table class="nf-items-table">
+                <thead>
+                  <tr>
+                    <th style="width:36%">Descrição</th>
+                    <th class="right">Qtd.</th><th class="right">Un.</th>
+                    <th class="right">Vl. unit.</th><th class="right">Desc.</th><th class="right">Vl. total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td>Resma de papel A4 500fls</td><td class="right">100</td><td class="right">CX</td><td class="right">R$ 22,00</td><td class="right">—</td><td class="right">R$ 2.200,00</td></tr>
+                  <tr><td>Caneta esferográfica cx c/50</td><td class="right">30</td><td class="right">CX</td><td class="right">R$ 18,50</td><td class="right">R$ 55,50</td><td class="right">R$ 499,50</td></tr>
+                  <tr><td>Pasta arquivo L c/ visor</td><td class="right">200</td><td class="right">UN</td><td class="right">R$ 3,80</td><td class="right">—</td><td class="right">R$ 760,00</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="nf-section">
+              <div class="nf-section-title">Pagamento</div>
+              <div class="nf-fields">
+                <div class="nf-field"><div class="nf-field-label">Forma</div><div class="nf-field-val">Boleto bancário</div></div>
+                <div class="nf-field"><div class="nf-field-label">Condição</div><div class="nf-field-val">30 dias</div></div>
+                <div class="nf-field"><div class="nf-field-label">Vencimento</div><div class="nf-field-val bold">05/06/2025</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="nf-footer">
+            <div class="nf-total"><div class="nf-total-label">Subtotal</div><div class="nf-total-val">R$ 3.515,00</div></div>
+            <div class="nf-total"><div class="nf-total-label">Desconto</div><div class="nf-total-val">R$ 55,50</div></div>
+            <div class="nf-total"><div class="nf-total-label">Total NF</div><div class="nf-total-val highlight">R$ 3.459,50</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Q6 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">6</div>
+          <div class="q-text">Qual o valor a ser pago, para quem, e até quando? <span class="q-tag tag-nf">leitura NF</span></div>
+        </div>
+        <div class="open-box">
+          <textarea class="open-textarea" id="q6" placeholder="Escreva sua resposta..."></textarea>
+        </div>
+      </div>
+
+      <!-- Q7 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">7</div>
+          <div class="q-text">Qual o valor total de desconto concedido nesta NF e sobre qual item ele foi aplicado? <span class="q-tag tag-nf">leitura NF</span></div>
+        </div>
+        <div class="open-box">
+          <textarea class="open-textarea" id="q7" placeholder="Escreva sua resposta..."></textarea>
+        </div>
+      </div>
+
+      <!-- Q8 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">8</div>
+          <div class="q-text">Qual o valor pago por caixa de caneta após o desconto? <span class="q-tag tag-nf">cálculo NF</span></div>
+        </div>
+        <div class="open-box">
+          <textarea class="open-textarea" id="q8" placeholder="Escreva sua resposta..."></textarea>
+        </div>
+      </div>
+
+      <!-- Q9 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">9</div>
+          <div class="q-text">Ao lançar esta NF no contas a pagar, quais três campos você considera mais importantes para registrar? <span class="q-tag tag-nf">leitura NF</span></div>
+        </div>
+        <div class="open-box">
+          <textarea class="open-textarea" id="q9" placeholder="Escreva sua resposta..."></textarea>
+        </div>
+      </div>
+
+      <!-- Q10 -->
+      <div class="q-card">
+        <div class="q-header">
+          <div class="q-num">10</div>
+          <div class="q-text">Você lançou esta NF e agendou o pagamento para 02/06/2025 — três dias antes do vencimento. Ao revisar, percebe o agendamento. O que você faz? <span class="q-tag tag-nf">situacional NF</span></div>
+        </div>
+        <div class="options" id="q10">
+          <div class="option" onclick="selectOption(this,'q10','a')"><span class="opt-letter">a)</span>Mantém, pois pagar antes do vencimento não é problema</div>
+          <div class="option" onclick="selectOption(this,'q10','b')"><span class="opt-letter">b)</span>Corrige para 05/06/2025, pois antecipar impacta o fluxo de caixa sem necessidade</div>
+          <div class="option" onclick="selectOption(this,'q10','c')"><span class="opt-letter">c)</span>Cancela o pagamento e aguarda o fornecedor cobrar</div>
+          <div class="option" onclick="selectOption(this,'q10','d')"><span class="opt-letter">d)</span>Mantém se o saldo bancário do dia estiver positivo</div>
+        </div>
+      </div>
+
+      <!-- Finalizar -->
+      <div class="finish-section">
+        <h3>Finalizar teste</h3>
+        <p>Ao clicar em finalizar, suas respostas serão enviadas automaticamente para a equipe. Certifique-se de estar conectado à internet.</p>
+        <button class="btn-finish" onclick="finishTest()">
+          <svg viewBox="0 0 24 24"><path d="M22 2L11 13M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+          Finalizar e enviar respostas
+        </button>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer" style="margin-top:2rem">
+        <div class="footer-item"><div class="footer-dot dot-blue"></div>5 questões operacionais</div>
+        <div class="footer-item"><div class="footer-dot dot-green"></div>5 questões práticas com NF</div>
+      </div>
+
+    </div><!-- /test-screen -->
+  </div><!-- /page -->
+
+  <script>
+    // ── Estado
+    let timerInterval = null;
+    let startTime = null;
+    let candidateName = '';
+    const answers = {};
+
+    // ── Habilitar botão só com nome
+    document.getElementById('candidate-name').addEventListener('input', function() {
+      const btn = document.getElementById('btn-start');
+      btn.disabled = this.value.trim().length < 2;
+    });
+
+    // Enter no campo de nome
+    document.getElementById('candidate-name').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && this.value.trim().length >= 2) startTest();
+    });
+
+    // ── Iniciar teste
+    function startTest() {
+      candidateName = document.getElementById('candidate-name').value.trim();
+      if (!candidateName) return;
+
+      document.getElementById('start-screen').style.display = 'none';
+      document.getElementById('test-screen').style.display = 'block';
+      document.getElementById('timer-name').textContent = candidateName;
+      document.getElementById('header-name').textContent = 'Candidato(a): ' + candidateName;
+
+      startTime = Date.now();
+      timerInterval = setInterval(updateTimer, 1000);
+      window.scrollTo(0, 0);
+    }
+
+    // ── Timer
+    function updateTimer() {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+      const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+      const s = String(elapsed % 60).padStart(2, '0');
+      document.getElementById('timer-display').textContent = h + ':' + m + ':' + s;
+    }
+
+    function getElapsedFormatted() {
+      const elapsed = Math.floor((Date.now() - startTime) / 1000);
+      const h = Math.floor(elapsed / 3600);
+      const m = Math.floor((elapsed % 3600) / 60);
+      const s = elapsed % 60;
+      let parts = [];
+      if (h > 0) parts.push(h + 'h');
+      if (m > 0) parts.push(m + 'min');
+      parts.push(s + 's');
+      return parts.join(' ');
+    }
+
+    // ── Selecionar opção
+    function selectOption(el, qId, letter) {
+      const container = document.getElementById(qId);
+      container.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+      el.classList.add('selected');
+      answers[qId] = letter;
+    }
+
+    // ── Bloquear cópia e atalhos
+    document.addEventListener('copy', e => e.preventDefault());
+    document.addEventListener('cut', e => e.preventDefault());
+    document.addEventListener('contextmenu', e => e.preventDefault());
+
+    document.addEventListener('keydown', function(e) {
+      // Bloqueia Ctrl+C, Ctrl+X, Ctrl+A, Ctrl+P, PrintScreen
+      if (e.key === 'PrintScreen' || (e.ctrlKey && ['c','x','a','p','u','s'].includes(e.key.toLowerCase()))) {
+        e.preventDefault();
+        // Print screen: pisca tela branca
+        if (e.key === 'PrintScreen') flashWhite();
+      }
+    });
+
+    // Detecta Alt+PrintScreen e F12 também
+    document.addEventListener('keyup', function(e) {
+      if (e.key === 'PrintScreen') flashWhite();
+    });
+
+    function flashWhite() {
+      const overlay = document.getElementById('print-overlay');
+      overlay.style.display = 'block';
+      setTimeout(() => { overlay.style.display = 'none'; }, 1500);
+    }
+
+    // Detecta visibilidade (alt+tab / troca de janela)
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden && document.getElementById('test-screen').style.display === 'block') {
+        flashWhite();
+      }
+    });
+
+    // ── Finalizar e enviar
+    const APPS_SCRIPT_URL = 'https://script.google.com/a/macros/vende-c.com/s/AKfycbzYq7E-1qFpC80mp4jS8UTzXLXFzwVAY6GO7NaS61-mb9DjUXFtUsEq47wi3AAraDEOjw/exec';
+
+    function finishTest() {
+      clearInterval(timerInterval);
+      const tempo = getElapsedFormatted();
+
+      const dados = {
+        nome: candidateName,
+        tempo: tempo,
+        q1:  document.getElementById('q1').value.trim() || '(sem resposta)',
+        q2:  answers['q2'] ? 'Alternativa ' + answers['q2'].toUpperCase() : '(sem resposta)',
+        q3:  document.getElementById('q3').value.trim() || '(sem resposta)',
+        q4:  answers['q4'] ? 'Alternativa ' + answers['q4'].toUpperCase() : '(sem resposta)',
+        q5:  answers['q5'] ? 'Alternativa ' + answers['q5'].toUpperCase() : '(sem resposta)',
+        q6:  document.getElementById('q6').value.trim() || '(sem resposta)',
+        q7:  document.getElementById('q7').value.trim() || '(sem resposta)',
+        q8:  document.getElementById('q8').value.trim() || '(sem resposta)',
+        q9:  document.getElementById('q9').value.trim() || '(sem resposta)',
+        q10: answers['q10'] ? 'Alternativa ' + answers['q10'].toUpperCase() : '(sem resposta)',
+      };
+
+      // Monta URL com todos os dados como parametros GET
+      const params = Object.keys(dados).map(function(key) {
+        return encodeURIComponent(key) + '=' + encodeURIComponent(dados[key]);
+      }).join('&');
+
+      const url = APPS_SCRIPT_URL + '?' + params;
+
+      // Metodo 1: script tag — contorna CORS completamente
+      var script = document.createElement('script');
+      script.src = url + '&callback=appScriptCallback';
+      document.head.appendChild(script);
+
+      // Metodo 2: fallback com img tag simultaneo
+      var img = new Image();
+      img.src = url;
+
+      // Metodo 3: fallback com iframe oculto
+      var iframe = document.createElement('iframe');
+      iframe.style.display = 'none';
+      iframe.src = url;
+      document.body.appendChild(iframe);
+
+      // Tela de confirmacao imediata
+      document.getElementById('test-screen').innerHTML =
+        '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:60vh;text-align:center;gap:1.25rem;padding:2rem">'
+        + '<div style="width:64px;height:64px;background:#0F6E4A;border-radius:50%;display:flex;align-items:center;justify-content:center">'
+        + '<svg viewBox="0 0 24 24" style="width:32px;height:32px;fill:none;stroke:white;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round"><path d="M20 6L9 17l-5-5"/></svg>'
+        + '</div>'
+        + '<h2 style="font-size:22px;font-weight:500;color:var(--text);letter-spacing:-.02em">Teste concluido!</h2>'
+        + '<p style="font-size:15px;color:var(--text-2);max-width:380px;line-height:1.7">Suas respostas foram enviadas para a equipe.<br>Tempo de resolucao: <strong style="color:var(--text)">' + tempo + '</strong></p>'
+        + '<p style="font-size:13px;color:var(--text-3)">Voce ja pode fechar esta janela.</p>'
+        + '</div>';
+    }
+
+    // Callback para o metodo script tag
+    function appScriptCallback(data) {
+      console.log('Apps Script respondeu:', data);
+    }
+  </script>
+</body>
+</html>
